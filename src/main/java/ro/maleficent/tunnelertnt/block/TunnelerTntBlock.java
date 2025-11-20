@@ -126,8 +126,6 @@ public class TunnelerTntBlock extends TntBlock {
     @Override
     public void wasExploded(ServerLevel level, BlockPos pos, Explosion explosion) {
         if (level.getGameRules().getBoolean(GameRules.RULE_TNT_EXPLODES)) {
-            LivingEntity owner = explosion.getIndirectSourceEntity() instanceof LivingEntity le ? le : null;
-
             BlockState state = level.getBlockState(pos);
             Direction facing = state.hasProperty(FACING)
                     ? state.getValue(FACING)
