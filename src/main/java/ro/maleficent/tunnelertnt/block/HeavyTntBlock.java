@@ -50,8 +50,7 @@ public class HeavyTntBlock extends TntBlock {
                     level,
                     pos.getX() + 0.5,
                     pos.getY(),
-                    pos.getZ() + 0.5,
-                    igniter
+                    pos.getZ() + 0.5
             );
 
             level.addFreshEntity(heavy_tnt);
@@ -103,15 +102,12 @@ public class HeavyTntBlock extends TntBlock {
     @Override
     public void wasExploded(ServerLevel level, BlockPos pos, Explosion explosion) {
         if (level.getGameRules().getBoolean(GameRules.RULE_TNT_EXPLODES)) {
-            LivingEntity owner = explosion.getIndirectSourceEntity() instanceof LivingEntity le ? le : null;
-
             HeavyTntEntity heavy_tnt = new HeavyTntEntity(
                     ModEntities.HEAVY_TNT,
                     level,
                     pos.getX() + 0.5,
                     pos.getY(),
-                    pos.getZ() + 0.5,
-                    owner
+                    pos.getZ() + 0.5
             );
 
             int baseFuse = heavy_tnt.getFuse();

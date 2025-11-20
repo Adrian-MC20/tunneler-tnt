@@ -7,6 +7,7 @@ import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
+import ro.maleficent.tunnelertnt.registry.ModEntities;
 
 public class HeavyTntEntity extends PrimedTnt {
 
@@ -26,9 +27,14 @@ public class HeavyTntEntity extends PrimedTnt {
                           Level level,
                           double x,
                           double y,
-                          double z,
-                          @Nullable LivingEntity owner) {
-        super(level, x, y, z, owner);
+                          double z) {
+        super(ModEntities.HEAVY_TNT, level);
+
+        this.setPos(x, y, z);
+
+        this.xo = x;
+        this.yo = y;
+        this.zo = z;
 
         // small random push like vanilla TNT
         double angle = level.random.nextDouble() * (Math.PI * 2.0);
