@@ -74,8 +74,7 @@ public class TunnelerTntBlock extends TntBlock {
                     pos.getX() + 0.5,
                     pos.getY(),
                     pos.getZ() + 0.5,
-                    facing,
-                    igniter
+                    facing
             );
 
             serverLevel.addFreshEntity(tunneler_tnt);
@@ -140,8 +139,7 @@ public class TunnelerTntBlock extends TntBlock {
                     pos.getX() + 0.5,
                     pos.getY(),
                     pos.getZ() + 0.5,
-                    facing,
-                    owner
+                    facing
             );
 
             int baseFuse = tunneler_tnt.getFuse();

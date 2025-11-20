@@ -15,10 +15,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
+import ro.maleficent.tunnelertnt.registry.ModEntities;
+
+import java.util.Random;
 
 public class TunnelerTntEntity extends PrimedTnt {
 
-    private static final float BASE_POWER = 4.0F; // normal TNT power
+    private static final float BLAST_POWER = 4.0F; // normal TNT power
     private static final int TUNNEL_LENGTH = 16;
     private static final int TUNNEL_RADIUS = 4;
 
@@ -34,10 +37,13 @@ public class TunnelerTntEntity extends PrimedTnt {
                              double x,
                              double y,
                              double z,
-                             Direction facing,
-                             @Nullable LivingEntity owner) {
-        super(level, x, y, z, owner);
+                             Direction facing) {
+        super(ModEntities.TUNNELER_TNT, level);
+        this.setPos(x, y, z);
         this.facing = facing;
+
+        // Slightly longer, 6 seconds fuse
+        this.setFuse(120);
 
         // small random push like vanilla TNT
         double angle = level.random.nextDouble() * (Math.PI * 2.0);
@@ -46,6 +52,13 @@ public class TunnelerTntEntity extends PrimedTnt {
                 0.2,
                 -Math.cos(angle) * 0.02
         );
+
+        this.xo = x;
+        this.yo = y;
+        this.zo = z;
+
+        // NOTE: We cannot set 'owner' because the field is private in vanilla code.
+        // The TNT will work fine, but it won't track who placed it for PvP kill feeds.
     }
 
     @SuppressWarnings("unused")
@@ -59,38 +72,37 @@ public class TunnelerTntEntity extends PrimedTnt {
 
     @Override
     public void tick() {
-        Level level = this.level();
-
-        // TNT physics
         if (!this.isNoGravity()) {
+            // Apply Gravity
             this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.04, 0.0));
         }
 
+        // Handle Movement
         this.move(MoverType.SELF, this.getDeltaMovement());
         this.setDeltaMovement(this.getDeltaMovement().scale(0.98));
 
+        // Ground friction
         if (this.onGround()) {
             this.setDeltaMovement(
                     this.getDeltaMovement().multiply(0.7, -0.5, 0.7)
             );
         }
 
-        // fuse countdown
+        // Countdown
         int fuse = this.getFuse() - 1;
         this.setFuse(fuse);
 
         if (fuse <= 0) {
-            this.discard();
-
-            if (!level.isClientSide()) {
-                // custom helper: normal TNT explosion + tunnel carve
-                performExplosionAndTunnel(level);
+            // TIME'S UP!
+            this.discard(); // Remove entity
+            if (!this.level().isClientSide()) {
+                this.explodeAndCarve(); // BOOM
             }
         } else {
+            // Visuals while waiting
             this.updateInWaterStateAndDoFluidPushing();
-
-            if (level.isClientSide()) {
-                level.addParticle(
+            if (this.level().isClientSide()) {
+                this.level().addParticle(
                         ParticleTypes.SMOKE,
                         this.getX(),
                         this.getY() + 0.5,
@@ -103,14 +115,16 @@ public class TunnelerTntEntity extends PrimedTnt {
         }
     }
 
-    private void performExplosionAndTunnel(Level level) {
+    private void explodeAndCarve() {
+        Level level = this.level();
+
         // 1) Vanilla-strength TNT explosion (power 4)
         level.explode(
                 this,
                 this.getX(),
-                this.getY(),
+                this.getY(0.0625D),
                 this.getZ(),
-                BASE_POWER,
+                BLAST_POWER,
                 Level.ExplosionInteraction.TNT
         );
 
@@ -125,62 +139,55 @@ public class TunnelerTntEntity extends PrimedTnt {
         }
 
         BlockPos origin = this.blockPosition();
-        for (int distance = 1; distance <= TUNNEL_LENGTH; distance++) {
-            BlockPos center = origin.relative(dir, distance);
+        RandomSource random = level.getRandom();
 
+        // SETTING: Drop Rate (e.g., 0.3 means only 30% of blocks drop items)
+        // This prevents server overload and lag while still giving loot
+        float dropChance = 0.3f;
+
+        // Loop 1: LENGTH (Forward 0 to 16)
+        for (int distance = 1; distance <= TUNNEL_LENGTH; distance++) {
+            BlockPos centerSlice = origin.relative(dir, distance);
+
+            // Loop 2: WIDTH(Radius -4 to 4)
             for (int dx = -TUNNEL_RADIUS; dx <= TUNNEL_RADIUS; dx++) {
                 for (int dy = -TUNNEL_RADIUS; dy <= TUNNEL_RADIUS; dy++) {
-                    if (dx * dx + dy * dy > TUNNEL_RADIUS*TUNNEL_RADIUS) {
-                        continue;
-                    }
 
+                    // Orient the circle based on facing direction
                     BlockPos targetPos;
                     if (dir.getAxis() == Direction.Axis.X) {
                         // EAST/WEST: forward is X, side is Z
-                        targetPos = center.offset(0, dy, dx);
+                        targetPos = centerSlice.offset(0, dy, dx);
                     } else {
                         // NORTH/SOUTH: forward is Z, side is X
-                        targetPos = center.offset(dx, dy, 0);
+                        targetPos = centerSlice.offset(dx, dy, 0);
                     }
 
                     BlockState state = level.getBlockState(targetPos);
 
-                    // 1) Never break bedrock
-                    if (state.is(Blocks.BEDROCK)) {
+                    // Checks
+                    // Skip air, bedrock and ores
+                    if (state.isAir() || state.is(Blocks.BEDROCK) || isPrecious(state)) {
                         continue;
                     }
 
-                    // 2) Skip ores - keep all ore blocks intact and exposed
-                    if (isPrecious(state)) {
+                    // JITTER MATH
+                    double distSq = dx * dx + dy * dy;
+                    double maxRadius = TUNNEL_RADIUS;
+
+                    // Noise: 0.0 to 1.2 (Rough walls)
+                    double noise = random.nextDouble() * 1.2;
+                    double effectiveRadius = maxRadius - noise;
+
+                    if (distSq > (effectiveRadius * effectiveRadius)) {
                         continue;
                     }
 
-                    // 3) Shape + noise: clean core, noisy edge
-                    int innerR = TUNNEL_RADIUS - 1; // core radius that is always cleared
+                    // Roll the dice for block destruction
+                    // If random value is < 0.3, we drop (true). Otherwise, we destroy (false)
+                    boolean shouldDrop = random.nextFloat() < dropChance;
 
-                    int distSq = dx * dx + dy * dy;
-                    int innerSq = innerR * innerR;
-
-                    // Inside the inner core: always break
-                    if (distSq <= innerSq) {
-                        level.destroyBlock(targetPos, true, this);
-                        continue;
-                    }
-
-                    // We are in the outer ring: innerR < distance <= r
-                    // We add noise so the edge blocks remain as little protrusions
-                    RandomSource random = level.getRandom();
-
-                    // Chance that a block STAYS (is NOT broken) in the edge ring
-                    // 0.2 = 20% of edge blocks remain -> small teeth, no big blobs
-                    double keepChance = 0.2;
-
-                    if (random.nextDouble() < keepChance) {
-                        // Leave this block to create a jagged edge
-                        continue;
-                    }
-
-                    level.destroyBlock(targetPos,true, this);
+                    level.destroyBlock(targetPos,shouldDrop, this);
                 }
             }
         }
@@ -212,6 +219,9 @@ public class TunnelerTntEntity extends PrimedTnt {
         if (state.is(Blocks.EMERALD_BLOCK)) return true;
         if (state.is(Blocks.RAW_IRON_BLOCK) || state.is(Blocks.RAW_COPPER_BLOCK)) return true;
         if (state.is(Blocks.NETHERITE_BLOCK)) return true;
+
+        // Dungeon blocks
+        if (state.is(Blocks.SPAWNER) || state.is(Blocks.CHEST)) return true;
 
         return false;
     }
