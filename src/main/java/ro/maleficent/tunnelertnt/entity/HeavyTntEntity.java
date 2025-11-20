@@ -45,7 +45,6 @@ public class HeavyTntEntity extends PrimedTnt {
         this.setFuse(HEAVY_TNT_FUSE_TICKS);
     }
 
-    @SuppressWarnings("resource")
     @Override
     public void tick() {
         Level level = this.level();
