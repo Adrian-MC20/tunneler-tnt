@@ -3,6 +3,7 @@ package ro.maleficent.tunnelertnt.entity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -11,13 +12,15 @@ import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
 public class TunnelerTntEntity extends PrimedTnt {
 
     private static final float BASE_POWER = 4.0F; // normal TNT power
     private static final int TUNNEL_LENGTH = 16;
-    private static final int TUNNEL_RADIUS = 5;
+    private static final int TUNNEL_RADIUS = 4;
 
     private Direction facing = Direction.NORTH;
 
@@ -127,7 +130,7 @@ public class TunnelerTntEntity extends PrimedTnt {
 
             for (int dx = -TUNNEL_RADIUS; dx <= TUNNEL_RADIUS; dx++) {
                 for (int dy = -TUNNEL_RADIUS; dy <= TUNNEL_RADIUS; dy++) {
-                    if (dx * dx + dy*dy > TUNNEL_RADIUS*TUNNEL_RADIUS) {
+                    if (dx * dx + dy * dy > TUNNEL_RADIUS*TUNNEL_RADIUS) {
                         continue;
                     }
 
@@ -211,5 +214,19 @@ public class TunnelerTntEntity extends PrimedTnt {
         if (state.is(Blocks.NETHERITE_BLOCK)) return true;
 
         return false;
+    }
+
+    @Override
+    protected void addAdditionalSaveData(ValueOutput output) {
+        super.addAdditionalSaveData(output);
+        //save the direction as an integer (0-5)
+        output.putInt("TunnelFacing", this.facing.get3DDataValue());
+    }
+
+    @Override
+    protected void readAdditionalSaveData(ValueInput input) {
+        super.readAdditionalSaveData(input);
+        int facingId = input.getIntOr("TunnelFacing", Direction.NORTH.get3DDataValue());
+        this.facing = Direction.from3DDataValue(facingId);
     }
 }
