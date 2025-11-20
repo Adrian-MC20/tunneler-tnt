@@ -1,6 +1,7 @@
 {
   "block.tunnelertnt.heavy_tnt": "Heavy TNT",
-  "item.tunnelertnt.heavy_tnt": "Heavy TNT",
   "block.tunnelertnt.tunneler_tnt": "Tunneler TNT",
-  "item.tunnelertnt.tunneler_tnt": "Tunneler TNT"
+  "item.tunnelertnt.heavy_tnt": "Heavy TNT",
+  "item.tunnelertnt.tunneler_tnt": "Tunneler TNT",
+  "itemGroup.tunnelertnt.group": "Maleficent's TNT"
 }

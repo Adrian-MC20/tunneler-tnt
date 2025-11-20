@@ -1,0 +1,26 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_vanilla_tnt": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:tnt"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_vanilla_tnt"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "tunnelertnt:tunneler_tnt",
+      "tunnelertnt:heavy_tnt"
+    ]
+  }
+}

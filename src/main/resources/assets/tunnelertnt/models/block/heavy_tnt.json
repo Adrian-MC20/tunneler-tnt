@@ -1,8 +1,9 @@
 {
   "parent": "minecraft:block/cube_bottom_top",
   "textures": {
-    "bottom": "minecraft:block/tnt_bottom",
-    "side": "minecraft:block/tnt_side",
-    "top": "minecraft:block/tnt_top"
+    "particle": "tunnelertnt:block/heavy_tnt_side",
+    "top":      "tunnelertnt:block/heavy_tnt_top",
+    "bottom":   "tunnelertnt:block/heavy_tnt_bottom",
+    "side":     "tunnelertnt:block/heavy_tnt_side"
   }
 }

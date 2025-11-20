@@ -1,11 +1,10 @@
 {
-  "parent": "minecraft:block/cube",
+  "parent": "minecraft:block/orientable",
   "textures": {
-    "north": "tunnelertnt:block/tunneler_tnt_front",
-    "south": "tunnelertnt:block/tunneler_tnt_side",
-    "east": "tunnelertnt:block/tunneler_tnt_side",
-    "west": "tunnelertnt:block/tunneler_tnt_side",
-    "up": "tunnelertnt:block/tunneler_tnt_top",
-    "down": "tunnelertnt:block/tunneler_tnt_bottom"
+    "particle": "tunnelertnt:block/tunneler_tnt_side",
+    "top":      "tunnelertnt:block/tunneler_tnt_top",
+    "bottom":   "tunnelertnt:block/tunneler_tnt_bottom",
+    "front":    "tunnelertnt:block/tunneler_tnt_front",
+    "side":     "tunnelertnt:block/tunneler_tnt_side"
   }
 }

@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "GTG"
+  ],
+  "key": {
+    "T": "minecraft:tnt",
+    "G": "minecraft:gunpowder"
+  },
+  "result": {
+    "id": "tunnelertnt:heavy_tnt",
+    "count": 1
+  }
+}
