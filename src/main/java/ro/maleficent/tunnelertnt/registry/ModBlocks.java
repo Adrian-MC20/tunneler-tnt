@@ -12,11 +12,15 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import ro.maleficent.tunnelertnt.TunnelerTNT;
 import ro.maleficent.tunnelertnt.block.HeavyTntBlock;
+import ro.maleficent.tunnelertnt.block.TunnelerTntBlock;
 
 public final class ModBlocks {
 
     @SuppressWarnings("unused")
     public static final Block HEAVY_TNT = create("heavy_tnt", HeavyTntBlock::new);
+
+    @SuppressWarnings("unused")
+    public static final Block TUNNELER_TNT = create("tunneler_tnt", TunnelerTntBlock::new);
 
     private ModBlocks() {}
 

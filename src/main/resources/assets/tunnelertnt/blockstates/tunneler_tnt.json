@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "tunnelertnt:block/tunneler_tnt" },
+    "facing=east":  { "model": "tunnelertnt:block/tunneler_tnt", "y": 90 },
+    "facing=south": { "model": "tunnelertnt:block/tunneler_tnt", "y": 180 },
+    "facing=west":  { "model": "tunnelertnt:block/tunneler_tnt", "y": 270 }
+  }
+}

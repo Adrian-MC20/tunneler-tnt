@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "tunnelertnt:heavy_tnt"
+          "name": "tunnelertnt:tunneler_tnt"
         }
       ]
     }

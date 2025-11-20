@@ -1,0 +1,11 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "north": "tunnelertnt:block/tunneler_tnt_front",
+    "south": "tunnelertnt:block/tunneler_tnt_side",
+    "east": "tunnelertnt:block/tunneler_tnt_side",
+    "west": "tunnelertnt:block/tunneler_tnt_side",
+    "up": "tunnelertnt:block/tunneler_tnt_top",
+    "down": "tunnelertnt:block/tunneler_tnt_bottom"
+  }
+}

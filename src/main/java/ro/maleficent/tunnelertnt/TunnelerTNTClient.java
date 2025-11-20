@@ -14,5 +14,9 @@ public class TunnelerTNTClient implements ClientModInitializer {
                 ModEntities.HEAVY_TNT,
                 TntRenderer::new
         );
+        EntityRenderers.register(
+                ModEntities.TUNNELER_TNT,
+                TntRenderer::new
+        );
     }
 }
