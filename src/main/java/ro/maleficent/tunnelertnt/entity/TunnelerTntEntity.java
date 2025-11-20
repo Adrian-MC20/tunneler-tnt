@@ -111,7 +111,7 @@ public class TunnelerTntEntity extends PrimedTnt {
                 Level.ExplosionInteraction.TNT
         );
 
-        // 2) Tunnel carve in facing direction, skpping bedrock and ores
+        // 2) Tunnel carve in facing direction, skipping bedrock and ores
         carveTunnel(level);
     }
 
