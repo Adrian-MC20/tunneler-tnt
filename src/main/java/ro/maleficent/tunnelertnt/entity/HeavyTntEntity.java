@@ -8,26 +8,26 @@ import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-public class MegaTntEntity extends PrimedTnt {
+public class HeavyTntEntity extends PrimedTnt {
 
-    // Vanilla TNT ≈ 80 ticks. We want 8 seconds: 20 * 8 = 160
-    private static final int MEGA_FUSE_TICKS = 160;
+    // Vanilla TNT ≈ 80 ticks. We want 6 seconds: 20 * 6 = 120
+    private static final int HEAVY_TNT_FUSE_TICKS = 120;
 
-    // Vanilla TNT uses power 4.0. We want roughly radius 10, so power 10 is a good starting point.
-    private static final float MEGA_POWER = 10.0F;
+    // Vanilla TNT uses power 4.0. We want roughly diameter of 15 so the power should be 7.
+    private static final float HEAVY_TNT_POWER = 7.0F;
 
-    public MegaTntEntity(EntityType<? extends MegaTntEntity> type, Level world) {
+    public HeavyTntEntity(EntityType<? extends HeavyTntEntity> type, Level world) {
         super(type, world);
-        this.setFuse(MEGA_FUSE_TICKS);
+        this.setFuse(HEAVY_TNT_FUSE_TICKS);
     }
 
     @SuppressWarnings("unused")
-    public MegaTntEntity(EntityType<? extends  MegaTntEntity> type,
-                         Level level,
-                         double x,
-                         double y,
-                         double z,
-                         @Nullable LivingEntity owner) {
+    public HeavyTntEntity(EntityType<? extends HeavyTntEntity> type,
+                          Level level,
+                          double x,
+                          double y,
+                          double z,
+                          @Nullable LivingEntity owner) {
         super(level, x, y, z, owner);
 
         // small random push like vanilla TNT
@@ -38,7 +38,7 @@ public class MegaTntEntity extends PrimedTnt {
                 -Math.cos(angle) * 0.02
         );
 
-        this.setFuse(MEGA_FUSE_TICKS);
+        this.setFuse(HEAVY_TNT_FUSE_TICKS);
     }
 
     @SuppressWarnings("resource")
@@ -73,7 +73,7 @@ public class MegaTntEntity extends PrimedTnt {
                         this.getX(),
                         this.getY(0.0625D),
                         this.getZ(),
-                        MEGA_POWER,
+                        HEAVY_TNT_POWER,
                         Level.ExplosionInteraction.TNT
                 );
             }

@@ -28,25 +28,25 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
-import ro.maleficent.tunnelertnt.entity.MegaTntEntity;
+import ro.maleficent.tunnelertnt.entity.HeavyTntEntity;
 import ro.maleficent.tunnelertnt.registry.ModEntities;
 
-public class MegaTntBlock extends TntBlock {
+public class HeavyTntBlock extends TntBlock {
 
-    public MegaTntBlock(BlockBehaviour.Properties properties) {
+    public HeavyTntBlock(BlockBehaviour.Properties properties) {
         super(properties);
     }
 
-    // Helper: prime Mega TNT (no owner)
+    // Helper: prime Heavy TNT (no owner)
     public static boolean prime(Level level, BlockPos pos) {
         return prime(level, pos, null);
     }
 
-    // Helper: prime Mega TNT with an optional owner
+    // Helper: prime Heavy TNT with an optional owner
     private static boolean prime(Level level, BlockPos pos, @Nullable LivingEntity igniter) {
         if (level instanceof ServerLevel serverLevel && serverLevel.getGameRules().getBoolean(GameRules.RULE_TNT_EXPLODES)) {
-            MegaTntEntity mega = new MegaTntEntity(
-                    ModEntities.MEGA_TNT,
+            HeavyTntEntity heavy_tnt = new HeavyTntEntity(
+                    ModEntities.HEAVY_TNT,
                     level,
                     pos.getX() + 0.5,
                     pos.getY(),
@@ -54,10 +54,10 @@ public class MegaTntBlock extends TntBlock {
                     igniter
             );
 
-            level.addFreshEntity(mega);
+            level.addFreshEntity(heavy_tnt);
             level.playSound(
                     null,
-                    mega.getX(), mega.getY(), mega.getZ(),
+                    heavy_tnt.getX(), heavy_tnt.getY(), heavy_tnt.getZ(),
                     SoundEvents.TNT_PRIMED,
                     SoundSource.BLOCKS,
                     1.0F,
@@ -105,8 +105,8 @@ public class MegaTntBlock extends TntBlock {
         if (level.getGameRules().getBoolean(GameRules.RULE_TNT_EXPLODES)) {
             LivingEntity owner = explosion.getIndirectSourceEntity() instanceof LivingEntity le ? le : null;
 
-            MegaTntEntity mega = new MegaTntEntity(
-                    ModEntities.MEGA_TNT,
+            HeavyTntEntity heavy_tnt = new HeavyTntEntity(
+                    ModEntities.HEAVY_TNT,
                     level,
                     pos.getX() + 0.5,
                     pos.getY(),
@@ -114,9 +114,9 @@ public class MegaTntBlock extends TntBlock {
                     owner
             );
 
-            int baseFuse = mega.getFuse();
-            mega.setFuse((short)(level.random.nextInt(baseFuse / 4) + baseFuse / 8));
-            level.addFreshEntity(mega);
+            int baseFuse = heavy_tnt.getFuse();
+            heavy_tnt.setFuse((short)(level.random.nextInt(baseFuse / 4) + baseFuse / 8));
+            level.addFreshEntity(heavy_tnt);
         }
     }
 

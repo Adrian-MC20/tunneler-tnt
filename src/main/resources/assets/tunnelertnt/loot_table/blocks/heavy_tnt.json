@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "tunnelertnt:item/mega_tnt"
+    "model": "tunnelertnt:item/heavy_tnt"
   }
 }

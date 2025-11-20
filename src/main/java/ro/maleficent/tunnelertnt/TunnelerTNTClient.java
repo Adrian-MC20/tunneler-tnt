@@ -9,9 +9,9 @@ public class TunnelerTNTClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        // Register MegaTNT entity renderer (same as vanilla TNT)
+        // Register Heavy TNT entity renderer (same as vanilla TNT)
         EntityRenderers.register(
-                ModEntities.MEGA_TNT,
+                ModEntities.HEAVY_TNT,
                 TntRenderer::new
         );
     }

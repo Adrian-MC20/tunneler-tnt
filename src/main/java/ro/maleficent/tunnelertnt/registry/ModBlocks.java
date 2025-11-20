@@ -11,12 +11,12 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import ro.maleficent.tunnelertnt.TunnelerTNT;
-import ro.maleficent.tunnelertnt.block.MegaTntBlock;
+import ro.maleficent.tunnelertnt.block.HeavyTntBlock;
 
 public final class ModBlocks {
 
     @SuppressWarnings("unused")
-    public static final Block MEGA_TNT = create("mega_tnt", MegaTntBlock::new);
+    public static final Block HEAVY_TNT = create("heavy_tnt", HeavyTntBlock::new);
 
     private ModBlocks() {}
 
