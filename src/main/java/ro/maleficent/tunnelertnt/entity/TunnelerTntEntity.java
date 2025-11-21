@@ -67,6 +67,7 @@ public class TunnelerTntEntity extends PrimedTnt {
         this.entityData.set(DATA_TUNNEL_FACING, facing.get3DDataValue());
     }
 
+    @NonnullDefault
     public Direction getDirection() {
         return Direction.from3DDataValue(this.entityData.get(DATA_TUNNEL_FACING));
     }
