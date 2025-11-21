@@ -5,7 +5,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.level.Level;
-import ro.maleficent.tunnelertnt.registry.ModEntities;
 
 public class HeavyTntEntity extends PrimedTnt {
 
@@ -26,7 +25,7 @@ public class HeavyTntEntity extends PrimedTnt {
                           double x,
                           double y,
                           double z) {
-        super(ModEntities.HEAVY_TNT, level);
+        super(type, level);
 
         this.setPos(x, y, z);
 

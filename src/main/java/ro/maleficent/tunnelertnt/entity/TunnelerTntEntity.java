@@ -12,7 +12,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import ro.maleficent.tunnelertnt.registry.ModEntities;
 
 public class TunnelerTntEntity extends PrimedTnt {
 
@@ -33,7 +32,7 @@ public class TunnelerTntEntity extends PrimedTnt {
                              double y,
                              double z,
                              Direction facing) {
-        super(ModEntities.TUNNELER_TNT, level);
+        super(type, level);
         this.setPos(x, y, z);
         this.facing = facing;
 

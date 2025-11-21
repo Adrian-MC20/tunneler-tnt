@@ -185,11 +185,10 @@ public class TunnelerTntBlock extends TntBlock {
     protected void onProjectileHit(Level level, BlockState state, BlockHitResult hit, Projectile projectile) {
         if (level instanceof ServerLevel serverLevel) {
             BlockPos pos = hit.getBlockPos();
-            Entity owner = projectile.getOwner();
 
             if (projectile.isOnFire()
                     && projectile.mayInteract(serverLevel, pos)
-                    && prime(level, pos, state, owner instanceof LivingEntity le ? le : null)) {
+                    && prime(level, pos, state)) {
                 level.removeBlock(pos, false);
             }
         }
