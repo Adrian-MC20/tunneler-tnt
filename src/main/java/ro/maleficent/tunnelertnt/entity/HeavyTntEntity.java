@@ -5,6 +5,9 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import org.lwjgl.system.NonnullDefault;
+import ro.maleficent.tunnelertnt.registry.ModBlocks;
 
 public class HeavyTntEntity extends PrimedTnt {
 
@@ -95,5 +98,11 @@ public class HeavyTntEntity extends PrimedTnt {
             }
         }
 
+    }
+
+    @Override
+    @NonnullDefault
+    public BlockState getBlockState() {
+        return ModBlocks.HEAVY_TNT.defaultBlockState();
     }
 }

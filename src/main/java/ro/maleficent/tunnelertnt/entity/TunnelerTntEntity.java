@@ -3,6 +3,9 @@ package ro.maleficent.tunnelertnt.entity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
@@ -10,8 +13,9 @@ import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
+import org.lwjgl.system.NonnullDefault;
+import ro.maleficent.tunnelertnt.block.TunnelerTntBlock;
+import ro.maleficent.tunnelertnt.registry.ModBlocks;
 
 public class TunnelerTntEntity extends PrimedTnt {
 
@@ -19,7 +23,8 @@ public class TunnelerTntEntity extends PrimedTnt {
     private static final int TUNNEL_LENGTH = 16;
     private static final int TUNNEL_RADIUS = 4;
 
-    private Direction facing = Direction.NORTH;
+    private static final EntityDataAccessor<Integer> DATA_TUNNEL_FACING =
+            SynchedEntityData.defineId(TunnelerTntEntity.class, EntityDataSerializers.INT);
 
     public TunnelerTntEntity(EntityType<? extends TunnelerTntEntity> type, Level level) {
         super(type, level);
@@ -34,7 +39,7 @@ public class TunnelerTntEntity extends PrimedTnt {
                              Direction facing) {
         super(type, level);
         this.setPos(x, y, z);
-        this.facing = facing;
+        this.setDirection(facing);
 
         // Slightly longer, 6 seconds fuse
         this.setFuse(120);
@@ -50,18 +55,20 @@ public class TunnelerTntEntity extends PrimedTnt {
         this.xo = x;
         this.yo = y;
         this.zo = z;
-
-        // NOTE: We cannot set 'owner' because the field is private in vanilla code.
-        // The TNT will work fine, but it won't track who placed it for PvP kill feeds.
     }
 
-    @SuppressWarnings("unused")
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(DATA_TUNNEL_FACING, Direction.NORTH.get3DDataValue());
+    }
+
     public void setDirection(Direction facing) {
-        this.facing = facing;
+        this.entityData.set(DATA_TUNNEL_FACING, facing.get3DDataValue());
     }
 
     public Direction getDirection() {
-        return this.facing;
+        return Direction.from3DDataValue(this.entityData.get(DATA_TUNNEL_FACING));
     }
 
     @Override
@@ -127,7 +134,7 @@ public class TunnelerTntEntity extends PrimedTnt {
     }
 
     private void carveTunnel(Level level) {
-        Direction dir = this.facing;
+        Direction dir = getDirection();
         if (!dir.getAxis().isHorizontal()) {
             dir = Direction.NORTH;
         }
@@ -221,16 +228,8 @@ public class TunnelerTntEntity extends PrimedTnt {
     }
 
     @Override
-    protected void addAdditionalSaveData(ValueOutput output) {
-        super.addAdditionalSaveData(output);
-        //save the direction as an integer (0-5)
-        output.putInt("TunnelFacing", this.facing.get3DDataValue());
-    }
-
-    @Override
-    protected void readAdditionalSaveData(ValueInput input) {
-        super.readAdditionalSaveData(input);
-        int facingId = input.getIntOr("TunnelFacing", Direction.NORTH.get3DDataValue());
-        this.facing = Direction.from3DDataValue(facingId);
+    @NonnullDefault
+    public BlockState getBlockState() {
+        return ModBlocks.TUNNELER_TNT.defaultBlockState().setValue(TunnelerTntBlock.FACING, getDirection());
     }
 }
