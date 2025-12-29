@@ -16,7 +16,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Explosion;
-import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -44,7 +44,7 @@ public class HeavyTntBlock extends TntBlock {
 
     // Helper: prime Heavy TNT with an optional owner
     private static boolean prime(Level level, BlockPos pos, @Nullable LivingEntity igniter) {
-        if (level instanceof ServerLevel serverLevel && serverLevel.getGameRules().getBoolean(GameRules.RULE_TNT_EXPLODES)) {
+        if (level instanceof ServerLevel serverLevel && serverLevel.getGameRules().get(GameRules.TNT_EXPLODES)) {
             HeavyTntEntity heavy_tnt = new HeavyTntEntity(
                     ModEntities.HEAVY_TNT,
                     level,
@@ -101,7 +101,7 @@ public class HeavyTntBlock extends TntBlock {
     // Explosion chain reactions
     @Override
     public void wasExploded(ServerLevel level, BlockPos pos, Explosion explosion) {
-        if (level.getGameRules().getBoolean(GameRules.RULE_TNT_EXPLODES)) {
+        if (level.getGameRules().get(GameRules.TNT_EXPLODES)) {
             HeavyTntEntity heavy_tnt = new HeavyTntEntity(
                     ModEntities.HEAVY_TNT,
                     level,
@@ -142,7 +142,7 @@ public class HeavyTntBlock extends TntBlock {
             }
 
             player.awardStat(Stats.ITEM_USED.get(item));
-        } else if (level instanceof ServerLevel serverLevel && !serverLevel.getGameRules().getBoolean(GameRules.RULE_TNT_EXPLODES)) {
+        } else if (level instanceof ServerLevel serverLevel && !serverLevel.getGameRules().get(GameRules.TNT_EXPLODES)) {
             player.displayClientMessage(Component.translatable("block.minecraft.tnt.disabled"), true);
             return InteractionResult.PASS;
         }

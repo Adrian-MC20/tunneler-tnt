@@ -4,7 +4,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -27,7 +27,7 @@ public final class ModBlocks {
     private static Block create(String name, java.util.function.Function<BlockBehaviour.Properties, Block> factory) {
 
         // Build ID
-        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(TunnelerTNT.MOD_ID, name);
+        Identifier id = Identifier.fromNamespaceAndPath(TunnelerTNT.MOD_ID, name);
 
         // Create block key
         ResourceKey<Block> blockKey = ResourceKey.create(Registries.BLOCK, id);

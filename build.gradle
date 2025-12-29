@@ -39,7 +39,7 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     // Mod Menu. This is just needed to see the mod in the dev environment
-    modLocalRuntime "com.terraformersmc:modmenu:16.0.0-rc.1"
+    modLocalRuntime "com.terraformersmc:modmenu:17.0.0-beta.1"
 }
 
 processResources {

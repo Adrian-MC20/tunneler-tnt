@@ -17,7 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Explosion;
-import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -63,7 +63,7 @@ public class TunnelerTntBlock extends TntBlock {
 
     // Helper: prime Heavy TNT with an optional owner
     private static boolean prime(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity igniter) {
-        if (level instanceof ServerLevel serverLevel && serverLevel.getGameRules().getBoolean(GameRules.RULE_TNT_EXPLODES)) {
+        if (level instanceof ServerLevel serverLevel && serverLevel.getGameRules().get(GameRules.TNT_EXPLODES)) {
 
             Direction facing = state.getValue(FACING);
 
@@ -124,7 +124,7 @@ public class TunnelerTntBlock extends TntBlock {
     // Explosion chain reactions
     @Override
     public void wasExploded(ServerLevel level, BlockPos pos, Explosion explosion) {
-        if (level.getGameRules().getBoolean(GameRules.RULE_TNT_EXPLODES)) {
+        if (level.getGameRules().get(GameRules.TNT_EXPLODES)) {
             BlockState state = level.getBlockState(pos);
             Direction facing = state.hasProperty(FACING)
                     ? state.getValue(FACING)
@@ -171,7 +171,7 @@ public class TunnelerTntBlock extends TntBlock {
             }
 
             player.awardStat(Stats.ITEM_USED.get(item));
-        } else if (level instanceof ServerLevel serverLevel && !serverLevel.getGameRules().getBoolean(GameRules.RULE_TNT_EXPLODES)) {
+        } else if (level instanceof ServerLevel serverLevel && !serverLevel.getGameRules().get(GameRules.TNT_EXPLODES)) {
             player.displayClientMessage(Component.translatable("block.minecraft.tnt.disabled"), true);
             return InteractionResult.PASS;
         }
